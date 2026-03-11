@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { supabase } from './lib/supabaseClient'
@@ -15,49 +15,77 @@ import ProfilePage from './pages/ProfilePage'
 import PrivateRoute from './components/PrivateRoute'
 import Layout from './components/Layout'
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-async function fetchProfile(userId: string, accessToken: string): Promise<Profile | null> {
-    const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/profiles?select=*&id=eq.${userId}`,
-        {
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${accessToken}`,
-            }
-        }
-    )
-    const data = await res.json()
-    return data?.[0] ?? null
-}
-
 export default function App() {
     const dispatch = useDispatch()
-    const { user } = useSelector((state: RootState) => state.auth)
-    const [initialized, setInitialized] = useState(false)
+    const { user, isLoading } = useSelector((state: RootState) => state.auth)
 
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
-                console.log('AUTH EVENT:', event, session?.user?.id)
+                console.log('EVENT:', event, 'USER:', session?.user?.id)
 
                 if (session?.user && session.access_token) {
-                    const profile = await fetchProfile(session.user.id, session.access_token)
-                    console.log('profile:', profile)
-                    dispatch(setUser(profile))
+                    try {
+                        const res = await fetch(
+                            `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/profiles?select=*&id=eq.${session.user.id}`,
+                            {
+                                headers: {
+                                    'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+                                    'Authorization': `Bearer ${session.access_token}`,
+                                }
+                            }
+                        )
+
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! status: ${res.status}`)
+                        }
+
+                        const data = await res.json()
+                        const profile = data?.[0] ?? null
+                        console.log('profile:', profile)
+                        dispatch(setUser(profile as Profile))
+                    } catch (error) {
+                        console.error('Error fetching profile:', error)
+                        dispatch(setUser(null))
+                    }
                 } else {
                     dispatch(setUser(null))
                 }
-
-                setInitialized(true)
             }
         )
+
+        // Проверяем существующую сессию при загрузке
+        const initAuth = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session?.user && session.access_token) {
+                try {
+                    const res = await fetch(
+                        `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/profiles?select=*&id=eq.${session.user.id}`,
+                        {
+                            headers: {
+                                'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+                                'Authorization': `Bearer ${session.access_token}`,
+                            }
+                        }
+                    )
+                    const data = await res.json()
+                    const profile = data?.[0] ?? null
+                    dispatch(setUser(profile as Profile))
+                } catch (error) {
+                    console.error('Error fetching profile in init:', error)
+                    dispatch(setUser(null))
+                }
+            } else {
+                dispatch(setUser(null))
+            }
+        }
+
+        initAuth()
 
         return () => subscription.unsubscribe()
     }, [dispatch])
 
-    if (!initialized) return <div>Загрузка...</div>
+    if (isLoading) return <div>Загрузка...</div>
 
     return (
         <Routes>

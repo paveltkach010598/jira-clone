@@ -17,14 +17,12 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action: PayloadAction<Profile | null>) {
+            console.log('setUser вызван:', action.payload)
             state.user = action.payload
             state.isLoading = false
-        },
-        setLoading(state, action: PayloadAction<boolean>) {
-            state.isLoading = action.payload
         },
     },
 })
 
-export const { setUser, setLoading } = authSlice.actions
+export const { setUser } = authSlice.actions
 export default authSlice.reducer

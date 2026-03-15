@@ -1,6 +1,7 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { supabase } from '../../lib/supabaseClient'
+
 import type { Profile, UserRole } from '../../types'
+import {apiGet, apiPatch} from "../../lib/appClient.ts";
 
 export const usersApi = createApi({
     reducerPath: 'usersApi',
@@ -10,43 +11,36 @@ export const usersApi = createApi({
 
         getUsers: builder.query<Profile[], void>({
             queryFn: async () => {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-
-                if (error) return { error }
-                return { data: data as Profile[] }
+                try {
+                    const data = await apiGet<Profile[]>('profiles?select=*&order=created_at.desc')
+                    return { data }
+                } catch (error) {
+                    return { error }
+                }
             },
             providesTags: ['User'],
         }),
 
         updateUserRole: builder.mutation<Profile, { id: string; role: UserRole }>({
             queryFn: async ({ id, role }) => {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .update({ role })
-                    .eq('id', id)
-                    .select()
-                    .single()
-
-                if (error) return { error }
-                return { data }
+                try {
+                    const data = await apiPatch<Profile[]>(`profiles?id=eq.${id}`, { role })
+                    return { data: Array.isArray(data) ? data[0] : data }
+                } catch (error) {
+                    return { error }
+                }
             },
             invalidatesTags: ['User'],
         }),
 
         updateProfile: builder.mutation<Profile, { id: string; updates: Partial<Profile> }>({
             queryFn: async ({ id, updates }) => {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .update(updates)
-                    .eq('id', id)
-                    .select()
-                    .single()
-
-                if (error) return { error }
-                return { data }
+                try {
+                    const data = await apiPatch<Profile[]>(`profiles?id=eq.${id}`, updates)
+                    return { data: Array.isArray(data) ? data[0] : data }
+                } catch (error) {
+                    return { error }
+                }
             },
             invalidatesTags: ['User'],
         }),

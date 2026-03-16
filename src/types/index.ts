@@ -1,4 +1,4 @@
-export type UserRole = 'user' | 'hr' | 'teamlead' | 'admin'
+export type UserRole = 'developer' | 'hr' | 'teamlead' | 'admin'
 
 export type TaskStatus = 'assigned' | 'in_progress' | 'review' | 'done'
 

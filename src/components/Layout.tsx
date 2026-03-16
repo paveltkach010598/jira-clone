@@ -150,7 +150,7 @@ export default function Layout() {
                         flex: 1,
                         pr: 2,
                     }}>
-                        <Typography variant="body2" fontWeight={600}>{user?.full_name || 'Пользователь'}</Typography>
+                        <Typography variant="body2" fontWeight={600}>{user?.full_name || 'Программист'}</Typography>
                         <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'capitalize' }}>{user?.role}</Typography>
                     </Box>
                 </Box>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useMemo, useState} from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -34,7 +34,14 @@ export default function Layout() {
         navigate('/login')
     }
 
-    const notDoneCount = tasks?.filter(t => t.status !== 'done').length ?? 0
+    const notDoneCount = useMemo(() => {
+        if (!tasks || !user) return 0
+        const isManager = user.role === 'admin' || user.role === 'teamlead'
+        const filtered = isManager
+            ? tasks.filter(t => t.status !== 'done')
+            : tasks.filter(t => t.status !== 'done' && t.assignee_id === user.id)
+        return filtered.length
+    }, [tasks, user])
 
     const navItems = [
         { label: 'Дашборд', path: '/', icon: <DashboardIcon />, roles: ['user', 'hr', 'teamlead', 'admin'] },
@@ -150,7 +157,7 @@ export default function Layout() {
                         flex: 1,
                         pr: 2,
                     }}>
-                        <Typography variant="body2" fontWeight={600}>{user?.full_name || 'Программист'}</Typography>
+                        <Typography variant="body2" fontWeight={600}>{user?.full_name || 'Пользователь'}</Typography>
                         <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'capitalize' }}>{user?.role}</Typography>
                     </Box>
                 </Box>

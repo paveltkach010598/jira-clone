@@ -71,7 +71,7 @@ export default function TasksPage() {
     const scrollRef = useRef<HTMLDivElement>(null)
     const hasScrolled = useRef(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
-
+    const [showDeadlines, setShowDeadlines] = useState(true)
 
 
     const canCreateTask = user?.role === 'admin' || user?.role === 'teamlead'
@@ -112,16 +112,14 @@ export default function TasksPage() {
             if (task.deadline) {
                 const deadlineDate = new Date(task.deadline)
                 const createdDate = new Date(task.created_at)
-                // Показываем карточку дедлайна если дедлайн не совпадает с датой создания
-                // ИЛИ если дедлайн сегодня — всё равно показываем
-                if (!isSameDay(deadlineDate, createdDate) || isSameDay(deadlineDate, new Date())) {
+                if (showDeadlines && (!isSameDay(deadlineDate, createdDate) || isSameDay(deadlineDate, new Date()))) {
                     addToDate(deadlineDate, { type: 'deadline', task })
                 }
             }
         })
 
         return map
-    }, [tasks])
+    }, [tasks,showDeadlines])
 
     const dates = useMemo(() => {
         return Object.keys(dateCardsMap)
@@ -254,6 +252,25 @@ export default function TasksPage() {
                         </Box>
                     </Box>
                 ))}
+                {isManager && (
+                    <Box
+                        onClick={() => setShowDeadlines(!showDeadlines)}
+                        sx={{
+                            px: 2, py: 0.75,
+                            borderRadius: 2,
+                            cursor: 'pointer',
+                            border: '1px solid',
+                            borderColor: showDeadlines ? '#ed6c02' : '#e0e0e0',
+                            bgcolor: showDeadlines ? '#ed6c02' : 'white',
+                            color: showDeadlines ? 'white' : 'text.primary',
+                            display: 'flex', alignItems: 'center', gap: 1,
+                            transition: 'all 0.2s',
+                            '&:hover': { borderColor: '#ed6c02' },
+                        }}
+                    >
+                        <Typography variant="caption" fontWeight={600}>📅 Дедлайны</Typography>
+                    </Box>
+                )}
             </Box>
 
             {/* Календарь */}

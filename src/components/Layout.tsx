@@ -263,11 +263,14 @@ export default function Layout() {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
                     ml: { xs: 0, sm: `${DRAWER_COLLAPSED_WIDTH}px` },
                     mt: { xs: 8, sm: 0 },
                     bgcolor: '#f8f9fa',
-                    minHeight: '100vh',
+                    height: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    position: 'relative',
                 }}
             >
                 <Outlet />

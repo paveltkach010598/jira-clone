@@ -1,12 +1,10 @@
-import { useRef, useMemo, useCallback, useState, useEffect } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import {
     Box, Typography, Paper, Chip, Avatar,
     Dialog, DialogTitle, DialogContent, Divider
 } from '@mui/material'
 import { useGetTasksQuery } from '../features/tasks/tasksApi'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../app/store'
 import type { Task, TaskStatus } from '../types'
 
 const STATUS_LABELS: Record<TaskStatus, string> = {
@@ -31,7 +29,6 @@ const STATUS_BG: Record<TaskStatus, string> = {
 }
 
 const COLUMN_WIDTH = 180
-const COLUMN_GAP = 1
 
 function generateDates(): Date[] {
     const dates: Date[] = []
@@ -54,11 +51,9 @@ function formatDayOfWeek(date: Date): string {
 }
 
 function isSameDay(a: Date, b: Date): boolean {
-    return (
-        a.getFullYear() === b.getFullYear() &&
+    return a.getFullYear() === b.getFullYear() &&
         a.getMonth() === b.getMonth() &&
         a.getDate() === b.getDate()
-    )
 }
 
 function isToday(date: Date): boolean {
@@ -101,31 +96,37 @@ export default function TasksPage() {
     const virtualizer = useVirtualizer({
         count: dates.length,
         getScrollElement: () => scrollRef.current,
-        estimateSize: () => COLUMN_WIDTH + COLUMN_GAP,
+        estimateSize: () => COLUMN_WIDTH,
         horizontal: true,
         overscan: 3,
     })
 
-    // Скролл к сегодня по центру
     useEffect(() => {
         if (!scrollRef.current || hasScrolled.current) return
         hasScrolled.current = true
         setTimeout(() => {
             const el = scrollRef.current
             if (!el) return
-            const offset = todayIndex * (COLUMN_WIDTH + COLUMN_GAP) - el.clientWidth / 2 + COLUMN_WIDTH / 2
+            const offset = todayIndex * COLUMN_WIDTH - el.clientWidth / 2 + COLUMN_WIDTH / 2
             el.scrollLeft = Math.max(0, offset)
         }, 100)
     }, [todayIndex])
 
     return (
-        <Box sx={{ height: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column' }}>
-
+        <Box sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            p: 3,
+            pb: 2,
+            overflow: 'hidden',
+            height: '100%',
+        }}>
             {/* Заголовок */}
             <Typography variant="h4" fontWeight={700} mb={2}>Задачи</Typography>
 
-            {/* Статистика — кружочки */}
-            <Box display="flex" gap={2} mb={2}>
+            {/* Статистика */}
+            <Box display="flex" gap={2} mb={2} flexShrink={0}>
                 {(Object.entries(stats) as [TaskStatus, number][]).map(([status, count]) => (
                     <Box key={status} display="flex" alignItems="center" gap={1}>
                         <Box sx={{
@@ -135,6 +136,7 @@ export default function TasksPage() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            flexShrink: 0,
                         }}>
                             <Typography variant="caption" fontWeight={700} color="white" fontSize={11}>
                                 {count}
@@ -147,23 +149,26 @@ export default function TasksPage() {
                 ))}
             </Box>
 
-            {/* Блок календаря */}
+            {/* Блок календаря — flex: 1 + minHeight: 0 = занимает всё оставшееся */}
             <Paper
                 elevation={0}
                 sx={{
                     flex: 1,
+                    minHeight: 0,
                     border: '1px solid #e0e0e0',
                     borderRadius: 3,
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
+                    mb: 1,
                 }}
             >
-                {/* Скроллируемый контейнер */}
+                {/* Горизонтальный скролл */}
                 <Box
                     ref={scrollRef}
                     sx={{
                         flex: 1,
+                        minHeight: 0,
                         overflowX: 'auto',
                         overflowY: 'hidden',
                         '&::-webkit-scrollbar': { height: 6 },
@@ -171,14 +176,12 @@ export default function TasksPage() {
                         '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: 3 },
                     }}
                 >
-                    <Box
-                        sx={{
-                            width: virtualizer.getTotalSize(),
-                            height: '100%',
-                            position: 'relative',
-                            display: 'flex',
-                        }}
-                    >
+                    {/* Виртуальный контейнер */}
+                    <Box sx={{
+                        width: virtualizer.getTotalSize(),
+                        height: '100%',
+                        position: 'relative',
+                    }}>
                         {virtualizer.getVirtualItems().map(virtualCol => {
                             const date = dates[virtualCol.index]
                             const dateKey = new Date(date).setHours(0, 0, 0, 0)
@@ -198,48 +201,45 @@ export default function TasksPage() {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         borderRight: '1px solid #e0e0e0',
-                                        bgcolor: today ? 'rgba(25, 118, 210, 0.03)' : isWeekend ? '#fafafa' : 'white',
+                                        bgcolor: today
+                                            ? 'rgba(25, 118, 210, 0.03)'
+                                            : isWeekend ? '#fafafa' : 'white',
                                     }}
                                 >
-                                    {/* Заголовок колонки */}
+                                    {/* Заголовок колонки — фиксированный */}
                                     <Box sx={{
-                                        px: 1.5,
-                                        py: 1,
+                                        px: 1.5, py: 1,
                                         borderBottom: '1px solid #e0e0e0',
-                                        bgcolor: today ? 'primary.main' : isWeekend ? '#f5f5f5' : '#fafafa',
+                                        bgcolor: today ? 'primary.main' : isWeekend ? '#f0f0f0' : '#fafafa',
                                         flexShrink: 0,
                                         textAlign: 'center',
                                     }}>
-                                        <Typography
-                                            variant="caption"
-                                            fontWeight={600}
-                                            sx={{
-                                                color: today ? 'white' : 'text.secondary',
-                                                display: 'block',
-                                                textTransform: 'uppercase',
-                                                fontSize: 10,
-                                            }}
-                                        >
+                                        <Typography variant="caption" fontWeight={600} sx={{
+                                            color: today ? 'white' : 'text.secondary',
+                                            display: 'block',
+                                            textTransform: 'uppercase',
+                                            fontSize: 10,
+                                        }}>
                                             {formatDayOfWeek(date)}
                                         </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            fontWeight={700}
-                                            sx={{ color: today ? 'white' : 'text.primary' }}
-                                        >
+                                        <Typography variant="body2" fontWeight={700} sx={{
+                                            color: today ? 'white' : 'text.primary'
+                                        }}>
                                             {formatDate(date)}
                                         </Typography>
                                     </Box>
 
-                                    {/* Задачи */}
+                                    {/* Задачи — вертикальный скролл внутри колонки */}
                                     <Box sx={{
                                         flex: 1,
+                                        minHeight: 0,
                                         overflowY: 'auto',
                                         p: 1,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         gap: 1,
                                         '&::-webkit-scrollbar': { width: 3 },
+                                        '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
                                         '&::-webkit-scrollbar-thumb': { bgcolor: '#ddd', borderRadius: 2 },
                                     }}>
                                         {colTasks.map(task => (
@@ -333,6 +333,7 @@ const TaskCard = ({ task, onClick }: { task: Task; onClick: () => void }) => (
             border: '1px solid #e8e8e8',
             borderRadius: 2,
             cursor: 'pointer',
+            flexShrink: 0,
             '&:hover': { borderColor: 'primary.main', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
             transition: 'all 0.15s ease',
         }}

@@ -15,7 +15,7 @@ import CreateTaskModal from '../components/CreateTaskModal'
 import EditIcon from '@mui/icons-material/Edit'
 import EditTaskModal from '../components/EditTaskModal'
 
-
+const DRAWER_COLLAPSED_WIDTH = 64
 const STATUS_LABELS: Record<TaskStatus, string> = {
     assigned: 'Назначена',
     in_progress: 'В работе',
@@ -176,13 +176,17 @@ export default function TasksPage() {
 
     return (
         <Box sx={{
-            flex: 1,
+            position: 'fixed',
+            top: 0,
+            left: DRAWER_COLLAPSED_WIDTH,
+            right: 0,
+            bottom: 0,
             display: 'flex',
             flexDirection: 'column',
             p: 3,
             pb: 2,
             overflow: 'hidden',
-            height: '100%',
+            bgcolor: '#f8f9fa',
         }}>
             {/* Заголовок */}
             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} flexShrink={0}>

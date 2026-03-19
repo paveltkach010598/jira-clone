@@ -266,6 +266,7 @@ export default function Layout() {
             </Box>
 
             {/* Контент */}
+            {/* Контент */}
             <Box
                 component="main"
                 sx={{
@@ -273,10 +274,9 @@ export default function Layout() {
                     ml: { xs: 0, sm: `${DRAWER_COLLAPSED_WIDTH}px` },
                     mt: { xs: 8, sm: 0 },
                     bgcolor: '#f8f9fa',
-                    height: '100vh',
+                    minHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
-                    overflow: 'hidden',
                     position: 'relative',
                 }}
             >

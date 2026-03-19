@@ -26,3 +26,13 @@ export interface Task {
     assignee?: Profile
     creator?: Profile
 }
+
+
+export interface Comment {
+    id: string
+    task_id: string
+    user_id: string
+    text: string
+    created_at: string
+    user?: Profile
+}

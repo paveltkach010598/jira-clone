@@ -5,6 +5,9 @@ import { useGetUsersQuery } from '../features/users/usersApi'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../app/store'
 import type { TaskStatus, UserRole } from '../types'
+import ActivityChart from '../components/ActivityChart'
+
+
 
 const STATUS_LABELS: Record<TaskStatus, string> = {
     assigned: 'Назначена',
@@ -250,7 +253,12 @@ export default function DashboardPage() {
                         })
                     })()}
                 </Paper>
+                {/* График активности */}
+                <Box sx={{ gridColumn: { md: '1 / -1' }, mb: 2 }}>
+                    <ActivityChart tasks={myTasks} />
+                </Box>
             </Box>
+
         </Box>
     )
 }

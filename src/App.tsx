@@ -14,11 +14,16 @@ import AdminPage from './pages/AdminPage'
 import ProfilePage from './pages/ProfilePage'
 import PrivateRoute from './components/PrivateRoute'
 import Layout from './components/Layout'
+import TeamPage from './pages/TeamPage.tsx'
+import UserProfilePage from './pages/UserProfilePage.tsx'
+import { ThemeProvider, CssBaseline } from '@mui/material'
+import { lightTheme, darkTheme } from './app/theme'
+
 
 export default function App() {
     const dispatch = useDispatch()
     const { user, isLoading } = useSelector((state: RootState) => state.auth)
-
+    const { mode } = useSelector((state: RootState) => state.theme)
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
@@ -87,7 +92,10 @@ export default function App() {
 
     if (isLoading) return <div>Загрузка...</div>
 
+
     return (
+        <ThemeProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
+            <CssBaseline />
         <Routes>
             <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
@@ -97,6 +105,8 @@ export default function App() {
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/tasks" element={<TasksPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/team" element={<TeamPage />} />
+                    <Route path="/team/:userId" element={<UserProfilePage />} />
                     <Route
                         path="/admin"
                         element={user?.role === 'admin' ? <AdminPage /> : <Navigate to="/" />}
@@ -104,5 +114,6 @@ export default function App() {
                 </Route>
             </Route>
         </Routes>
+        </ThemeProvider>
     )
 }

@@ -14,6 +14,7 @@ import type { Task, TaskStatus } from '../types'
 import CreateTaskModal from '../components/CreateTaskModal'
 import EditIcon from '@mui/icons-material/Edit'
 import EditTaskModal from '../components/EditTaskModal'
+import TaskComments from "../components/TaskCooments.tsx";
 
 const DRAWER_COLLAPSED_WIDTH = 64
 const STATUS_LABELS: Record<TaskStatus, string> = {
@@ -474,6 +475,7 @@ export default function TasksPage() {
                                     </Box>
                                 )}
                             </Box>
+                            <TaskComments taskId={selectedTask.id} />
                         </DialogContent>
                     </>
                 )}

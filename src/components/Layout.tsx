@@ -15,11 +15,18 @@ import { supabase } from '../lib/supabaseClient'
 import { setUser } from '../features/auth/authSlice'
 import type { RootState } from '../app/store'
 import { useGetTasksQuery } from '../features/tasks/tasksApi'
+import PeopleIcon from '@mui/icons-material/People'
+import NotificationModal from './NotificationModal'
+import { toggleTheme } from '../features/theme/themeSlice'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import LightModeIcon from '@mui/icons-material/LightMode'
+
 
 const DRAWER_WIDTH = 260
 const DRAWER_COLLAPSED_WIDTH = 64
 
 export default function Layout() {
+    const { mode } = useSelector((state: RootState) => state.theme)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
@@ -44,14 +51,15 @@ export default function Layout() {
     }, [tasks, user])
 
     const navItems = [
-        { label: 'Дашборд', path: '/', icon: <DashboardIcon />, roles: ['user', 'hr', 'teamlead', 'admin'] },
+        { label: 'Дашборд', path: '/', icon: <DashboardIcon />, roles: ['developer', 'hr', 'teamlead', 'admin'] },
         {
             label: 'Задачи', path: '/tasks',
             icon: <Badge badgeContent={notDoneCount} color="error" max={99}><TaskIcon /></Badge>,
-            roles: ['user', 'hr', 'teamlead', 'admin']
+            roles: ['developer', 'hr', 'teamlead', 'admin']
         },
         { label: 'Админ панель', path: '/admin', icon: <AdminIcon />, roles: ['admin'] },
-        { label: 'Профиль', path: '/profile', icon: <PersonIcon />, roles: ['user', 'hr', 'teamlead', 'admin'] },
+        { label: 'Профиль', path: '/profile', icon: <PersonIcon />, roles: ['developer', 'hr', 'teamlead', 'admin'] },
+        { label: 'Команда', path: '/team', icon: <PeopleIcon />, roles: ['admin', 'teamlead', 'hr', 'developer'] },
     ]
 
     const filteredNavItems = navItems.filter(item =>
@@ -221,7 +229,47 @@ export default function Layout() {
                 </List>
 
                 <Divider />
-
+                {/* Переключатель темы */}
+                <Box sx={{ py: 1 }}>
+                    <Box
+                        onClick={() => dispatch(toggleTheme())}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            width: 'calc(100% - 16px)',
+                            mx: 1,
+                            borderRadius: 2,
+                            cursor: 'pointer',
+                            overflow: 'hidden',
+                            '&:hover': { backgroundColor: 'rgba(0,0,0,0.06)' },
+                            transition: 'background-color 0.2s ease',
+                        }}
+                    >
+                        <Box sx={{
+                            width: DRAWER_COLLAPSED_WIDTH - 16,
+                            minWidth: DRAWER_COLLAPSED_WIDTH - 16,
+                            height: 44,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            color: 'text.secondary',
+                        }}>
+                            {mode === 'dark' ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
+                        </Box>
+                        <Typography
+                            variant="body2"
+                            fontWeight={500}
+                            sx={{
+                                whiteSpace: 'nowrap',
+                                opacity: expanded ? 1 : 0,
+                                transition: 'opacity 0.2s ease',
+                            }}
+                        >
+                            {mode === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+                        </Typography>
+                    </Box>
+                </Box>
                 {/* Выход */}
                 <Box sx={{ py: 1 }}>
                     <Box
@@ -282,6 +330,7 @@ export default function Layout() {
             >
                 <Outlet />
             </Box>
+            <NotificationModal />
         </Box>
     )
 }

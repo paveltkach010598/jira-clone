@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { store } from './app/store'
 import App from './App'
 
-// Один раз чистим старые данные
 const STORAGE_VERSION = '1'
 if (localStorage.getItem('app_version') !== STORAGE_VERSION) {
     localStorage.clear()

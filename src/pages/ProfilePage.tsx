@@ -64,13 +64,14 @@ export default function ProfilePage() {
     if (!user) return null
 
     return (
-        <Box maxWidth={600}>
+        <Box maxWidth={600} sx={{p:3}}>
             <Typography variant="h4" fontWeight={700} mb={3}>Профиль</Typography>
 
             {success && <Alert severity="success" sx={{ mb: 2 }}>Профиль успешно обновлён</Alert>}
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-            <Paper elevation={0} sx={{ border: '1px solid #e0e0e0', borderRadius: 3, overflow: 'hidden' }}>
+            <Paper elevation={0} sx={{ border: '1px solid',
+                borderColor: 'divider', borderRadius: 3, overflow: 'hidden' }}>
 
                 {/* Шапка профиля */}
                 <Box sx={{

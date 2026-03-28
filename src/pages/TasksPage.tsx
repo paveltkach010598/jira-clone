@@ -187,7 +187,7 @@ export default function TasksPage() {
             p: 3,
             pb: 2,
             overflow: 'hidden',
-            bgcolor: '#f8f9fa',
+            bgcolor: 'background.default',
         }}>
             {/* Заголовок */}
             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} flexShrink={0}>
@@ -208,8 +208,8 @@ export default function TasksPage() {
                         borderRadius: 2,
                         cursor: 'pointer',
                         border: '1px solid',
-                        borderColor: statusFilter === 'all' ? 'primary.main' : '#e0e0e0',
-                        bgcolor: statusFilter === 'all' ? 'primary.main' : 'white',
+                        borderColor: statusFilter === 'all' ? 'primary.main' : 'divider',
+                        bgcolor: statusFilter === 'all' ? 'primary.main' : 'background.paper',
                         color: statusFilter === 'all' ? 'white' : 'text.primary',
                         display: 'flex', alignItems: 'center', gap: 1,
                         transition: 'all 0.2s',
@@ -237,8 +237,8 @@ export default function TasksPage() {
                             borderRadius: 2,
                             cursor: 'pointer',
                             border: '1px solid',
-                            borderColor: statusFilter === status ? STATUS_BG[status] : '#e0e0e0',
-                            bgcolor: statusFilter === status ? STATUS_BG[status] : 'white',
+                            borderColor: statusFilter === status ? STATUS_BG[status] : 'divider',
+                            bgcolor: statusFilter === status ? STATUS_BG[status] : 'background.paper',
                             color: statusFilter === status ? 'white' : 'text.primary',
                             display: 'flex', alignItems: 'center', gap: 1,
                             transition: 'all 0.2s',
@@ -265,8 +265,8 @@ export default function TasksPage() {
                             borderRadius: 2,
                             cursor: 'pointer',
                             border: '1px solid',
-                            borderColor: showDeadlines ? '#ed6c02' : '#e0e0e0',
-                            bgcolor: showDeadlines ? '#ed6c02' : 'white',
+                            borderColor: showDeadlines ? '#ed6c02' : 'divider',
+                            bgcolor: showDeadlines ? '#ed6c02' : 'background.paper',
                             color: showDeadlines ? 'white' : 'text.primary',
                             display: 'flex', alignItems: 'center', gap: 1,
                             transition: 'all 0.2s',
@@ -287,7 +287,8 @@ export default function TasksPage() {
                 <Paper elevation={0} sx={{
                     flex: 1,
                     minHeight: 0,
-                    border: '1px solid #e0e0e0',
+                    border: '1px solid',
+                    borderColor: 'divider',
                     borderRadius: 3,
                     overflow: 'hidden',
                     display: 'flex',
@@ -302,8 +303,8 @@ export default function TasksPage() {
                             overflowX: 'auto',
                             overflowY: 'hidden',
                             '&::-webkit-scrollbar': { height: 6 },
-                            '&::-webkit-scrollbar-track': { bgcolor: '#f5f5f5' },
-                            '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: 3 },
+                            '&::-webkit-scrollbar-track': { bgcolor: 'background.default' },
+                            '&::-webkit-scrollbar-thumb': { bgcolor: 'divider', borderRadius: 3 },
                         }}
                     >
                         <Box sx={{
@@ -329,14 +330,16 @@ export default function TasksPage() {
                                             height: '100%',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            borderRight: '1px solid #e0e0e0',
-                                            bgcolor: today ? 'rgba(25,118,210,0.03)' : isWeekend ? '#fafafa' : 'white',
+                                            borderRight: '1px solid',
+                                            borderColor: 'divider',
+                                            bgcolor: today ? 'rgba(25,118,210,0.05)' : isWeekend ? 'action.hover' : 'background.paper',
                                         }}
                                     >
                                         <Box sx={{
                                             px: 1.5, py: 1,
-                                            borderBottom: '1px solid #e0e0e0',
-                                            bgcolor: today ? 'primary.main' : isWeekend ? '#f0f0f0' : '#fafafa',
+                                            borderBottom: '1px solid',
+                                            borderColor: 'divider',
+                                            bgcolor: today ? 'primary.main' : isWeekend ? 'action.hover' : 'background.default',
                                             flexShrink: 0,
                                             textAlign: 'center',
                                         }}>
@@ -534,7 +537,8 @@ const TaskCard = ({ card, onClick }: { card: CalendarCard; onClick: () => void }
     return (
         <Paper elevation={0} onClick={onClick} sx={{
             p: 1.25,
-            border: '1px solid #e8e8e8',
+            border: '1px solid',
+            borderColor: 'divider',
             borderRadius: 2,
             cursor: 'pointer',
             flexShrink: 0,

@@ -11,14 +11,14 @@ import type { RootState } from '../app/store'
 import type { UserRole, Profile } from '../types'
 
 const ROLE_LABELS: Record<UserRole, string> = {
-    user: 'Программист',
+    developer: 'Программист',
     hr: 'HR',
     teamlead: 'Тимлид',
     admin: 'Админ',
 }
 
 const ROLE_COLORS: Record<UserRole, 'default' | 'primary' | 'secondary' | 'error'> = {
-    user: 'default',
+    developer: 'default',
     hr: 'secondary',
     teamlead: 'primary',
     admin: 'error',
@@ -44,13 +44,13 @@ export default function AdminPage() {
     }
 
     if (isLoading) return (
-        <Box display="flex" justifyContent="center" mt={4}>
+        <Box display="flex" justifyContent="center" mt={4} >
             <CircularProgress />
         </Box>
     )
 
     return (
-        <Box>
+        <Box sx={{p:3}}>
             <Typography variant="h4" fontWeight={700} mb={1}>Админ панель</Typography>
             <Typography variant="body2" color="text.secondary" mb={3}>
                 Управление ролями пользователей
@@ -62,10 +62,11 @@ export default function AdminPage() {
                 </Alert>
             )}
 
-            <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid #e0e0e0', borderRadius: 3 }}>
+            <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid',
+                borderColor: 'divider', borderRadius: 3 }}>
                 <Table>
                     <TableHead>
-                        <TableRow sx={{ bgcolor: '#fafafa' }}>
+                        <TableRow sx={{ bgcolor: 'background.default' }}>
                             <TableCell fontWeight={600}>Программист</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>Текущая роль</TableCell>
@@ -78,7 +79,7 @@ export default function AdminPage() {
                             <TableRow
                                 key={user.id}
                                 sx={{
-                                    '&:hover': { bgcolor: '#fafafa' },
+                                    '&:hover': { bgcolor: 'action.hover' },
                                     opacity: updatingId === user.id ? 0.6 : 1,
                                     transition: 'opacity 0.2s',
                                 }}
@@ -120,7 +121,7 @@ export default function AdminPage() {
                                                 onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
                                                 disabled={updatingId === user.id}
                                             >
-                                                <MenuItem value="user">Программист</MenuItem>
+                                                <MenuItem value="developer">Программист</MenuItem>
                                                 <MenuItem value="hr">HR</MenuItem>
                                                 <MenuItem value="teamlead">Тимлид</MenuItem>
                                                 <MenuItem value="admin">Админ</MenuItem>

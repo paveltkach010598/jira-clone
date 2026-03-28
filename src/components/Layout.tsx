@@ -104,15 +104,17 @@ export default function Layout() {
                     width: expanded ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH,
                     transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     zIndex: 1200,
-                    bgcolor: 'white',
-                    borderRight: '1px solid #e0e0e0',
+                    bgcolor: 'background.paper',
+                    borderRight: '1px solid',
+                    borderColor: 'divider',
                     overflow: 'hidden',
                 }}
             >
                 {/* Шапка */}
                 <Box sx={{
                     height: 72,
-                    borderBottom: '1px solid #e0e0e0',
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
                     display: 'flex',
                     alignItems: 'center',
                     flexShrink: 0,
@@ -241,7 +243,9 @@ export default function Layout() {
                             borderRadius: 2,
                             cursor: 'pointer',
                             overflow: 'hidden',
-                            '&:hover': { backgroundColor: 'rgba(0,0,0,0.06)' },
+                            '&:hover': {
+                                backgroundColor: 'action.hover',
+                            },
                             transition: 'background-color 0.2s ease',
                         }}
                     >
@@ -321,7 +325,7 @@ export default function Layout() {
                     flexGrow: 1,
                     ml: { xs: 0, sm: `${DRAWER_COLLAPSED_WIDTH}px` },
                     mt: { xs: 8, sm: 0 },
-                    bgcolor: '#f8f9fa',
+                    bgcolor: 'background.default',
                     minHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',

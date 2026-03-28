@@ -70,7 +70,8 @@ export default function TeamPage() {
                                     onClick={() => navigate(`/team/${user.id}`)}
                                     sx={{
                                         p: 2.5,
-                                        border: '1px solid #e0e0e0',
+                                        border: '1px solid',
+                                        borderColor:'divider',
                                         borderRadius: 3,
                                         cursor: 'pointer',
                                         transition: 'all 0.2s',

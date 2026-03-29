@@ -1,11 +1,12 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-    Box, Typography, Paper, Avatar, Chip
+    Box, Typography, Paper, Chip
 } from '@mui/material'
 import { useGetUsersQuery } from '../features/users/usersApi'
 import { useGetTasksQuery } from '../features/tasks/tasksApi'
 import type { Profile, UserRole } from '../types'
+import UserAvatar from "../components/ui/UserAvatar.tsx";
 
 const ROLE_LABELS: Record<UserRole, string> = {
     developer: 'Программист',
@@ -83,13 +84,7 @@ export default function TeamPage() {
                                     }}
                                 >
                                     <Box display="flex" alignItems="center" gap={2} mb={2}>
-                                        <Avatar sx={{
-                                            width: 48, height: 48,
-                                            bgcolor: 'primary.main',
-                                            fontSize: 20, fontWeight: 700,
-                                        }}>
-                                            {user.full_name?.[0]?.toUpperCase() ?? '?'}
-                                        </Avatar>
+                                        <UserAvatar user={user} size={48} />
                                         <Box flex={1} overflow="hidden">
                                             <Typography variant="body1" fontWeight={600} sx={{
                                                 overflow: 'hidden',

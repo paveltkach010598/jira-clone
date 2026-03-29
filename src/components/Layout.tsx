@@ -20,6 +20,7 @@ import NotificationModal from './NotificationModal'
 import { toggleTheme } from '../features/theme/themeSlice'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
+import UserAvatar from "./ui/UserAvatar.tsx";
 
 
 const DRAWER_WIDTH = 260
@@ -156,9 +157,7 @@ export default function Layout() {
                         alignItems: 'center',
                         flexShrink: 0,
                     }}>
-                        <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.main', fontSize: 14 }}>
-                            {user?.full_name?.[0]?.toUpperCase()}
-                        </Avatar>
+                        <UserAvatar user={user} size={36} />
                     </Box>
                     <Box sx={{
                         opacity: expanded ? 1 : 0,

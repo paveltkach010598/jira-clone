@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
-    Box, Typography, Paper, Avatar, Chip,
+    Box, Typography, Paper, Chip,
     Button, Divider, LinearProgress
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -9,6 +9,7 @@ import { useGetUsersQuery } from '../features/users/usersApi'
 import { useGetTasksQuery } from '../features/tasks/tasksApi'
 import ActivityChart from '../components/ActivityChart'
 import type { UserRole, TaskStatus } from '../types'
+import UserAvatar from "../components/ui/UserAvatar.tsx";
 
 const ROLE_LABELS: Record<UserRole, string> = {
     developer: 'Программист',
@@ -79,17 +80,15 @@ export default function UserProfilePage() {
                 <Box sx={{ bgcolor: 'primary.main', height: 80 }} />
                 <Box sx={{ px: 3, pb: 3 }}>
                     <Box display="flex" alignItems="flex-end" justifyContent="space-between" mb={2}>
-                        <Avatar sx={{
-                            width: 72, height: 72,
-                            bgcolor: 'white',
-                            color: 'primary.main',
-                            fontSize: 28, fontWeight: 700,
-                            border: '4px solid white',
-                            mt: -4.5,
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                        }}>
-                            {user.full_name?.[0]?.toUpperCase() ?? '?'}
-                        </Avatar>
+                        <UserAvatar
+                            user={user}
+                            size={72}
+                            sx={{
+                                border: '4px solid white',
+                                mt: -4.5,
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                            }}
+                        />
                         <Chip
                             label={ROLE_LABELS[user.role as UserRole] ?? user.role}
                             color={ROLE_COLORS[user.role as UserRole]}

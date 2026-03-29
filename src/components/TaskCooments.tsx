@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-    Box, Typography, Avatar, TextField,
+    Box, Typography,  TextField,
     Button, IconButton, CircularProgress, Divider
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -8,6 +8,7 @@ import SendIcon from '@mui/icons-material/Send'
 import { useGetCommentsQuery, useAddCommentMutation, useDeleteCommentMutation } from '../features/comments/commentsApi'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../app/store'
+import UserAvatar from "./ui/UserAvatar.tsx";
 
 interface Props {
     taskId: string
@@ -59,13 +60,7 @@ export default function TaskComments({ taskId }: Props) {
 
                         return (
                             <Box key={comment.id} display="flex" gap={1.5} alignItems="flex-start">
-                                <Avatar sx={{
-                                    width: 32, height: 32,
-                                    bgcolor: 'primary.main',
-                                    fontSize: 13, flexShrink: 0
-                                }}>
-                                    {comment.user?.full_name?.[0]?.toUpperCase() ?? '?'}
-                                </Avatar>
+                                <UserAvatar user={comment.user} size={32} />
                                 <Box flex={1}>
                                     <Box display="flex" alignItems="center" justifyContent="space-between">
                                         <Box display="flex" alignItems="center" gap={1}>
@@ -107,9 +102,7 @@ export default function TaskComments({ taskId }: Props) {
 
             {/* Поле ввода */}
             <Box display="flex" gap={1} alignItems="flex-end">
-                <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 13, flexShrink: 0 }}>
-                    {user?.full_name?.[0]?.toUpperCase() ?? '?'}
-                </Avatar>
+                <UserAvatar user={user} size={32} />
                 <TextField
                     fullWidth
                     multiline

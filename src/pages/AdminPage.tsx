@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-    Box, Typography, Paper, Avatar, Chip,
+    Box, Typography, Paper, Chip,
     Select, MenuItem, FormControl, CircularProgress,
     Alert, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow
@@ -9,6 +9,7 @@ import { useGetUsersQuery, useUpdateUserRoleMutation } from '../features/users/u
 import { useSelector } from 'react-redux'
 import type { RootState } from '../app/store'
 import type { UserRole, Profile } from '../types'
+import UserAvatar from "../components/ui/UserAvatar.tsx";
 
 const ROLE_LABELS: Record<UserRole, string> = {
     developer: 'Программист',
@@ -86,9 +87,8 @@ export default function AdminPage() {
                             >
                                 <TableCell>
                                     <Box display="flex" alignItems="center" gap={1.5}>
-                                        <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.main', fontSize: 14 }}>
-                                            {user.full_name?.[0]?.toUpperCase() ?? '?'}
-                                        </Avatar>
+
+                                        <UserAvatar user={user} size={36} />
                                         <Box>
                                             <Typography variant="body2" fontWeight={600}>
                                                 {user.full_name || 'Без имени'}

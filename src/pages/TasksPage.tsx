@@ -15,6 +15,7 @@ import CreateTaskModal from '../components/CreateTaskModal'
 import EditIcon from '@mui/icons-material/Edit'
 import EditTaskModal from '../components/EditTaskModal'
 import TaskComments from "../components/TaskCooments.tsx";
+import UserAvatar from "../components/ui/UserAvatar.tsx";
 
 const DRAWER_COLLAPSED_WIDTH = 64
 const STATUS_LABELS: Record<TaskStatus, string> = {
@@ -427,9 +428,7 @@ export default function TasksPage() {
                                     <Box display="flex" alignItems="center" gap={2}>
                                         <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ width: 100 }}>ИСПОЛНИТЕЛЬ</Typography>
                                         <Box display="flex" alignItems="center" gap={1}>
-                                            <Avatar sx={{ width: 28, height: 28, fontSize: 13, bgcolor: 'primary.main' }}>
-                                                {selectedTask.assignee.full_name?.[0]?.toUpperCase()}
-                                            </Avatar>
+                                            <UserAvatar user={selectedTask.assignee} size={32} />
                                             <Typography variant="body2">{selectedTask.assignee.full_name}</Typography>
                                         </Box>
                                     </Box>
